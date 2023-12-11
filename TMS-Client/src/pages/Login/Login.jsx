@@ -1,4 +1,5 @@
-import {React, useContext, useRef, useState } from "react";
+/* eslint-disable no-cond-assign */
+import { useContext, useRef, useState } from "react";
 import {
   FaEye,
   FaEyeSlash,
@@ -90,6 +91,7 @@ const Login = () => {
       })
       .catch((err) => {
         console.log(err.message);
+        // eslint-disable-next-line no-constant-condition
         if(err.message = "auth/missing-email"){
 
             toast.error("Please Provide E-mail");

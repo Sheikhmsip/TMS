@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import {
+  FacebookAuthProvider,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
@@ -13,11 +14,17 @@ import { app } from "../firebase/firebase.config";
 
 const auth = getAuth(app);
 export const AuthContext = createContext();
-const AuthProvider = ({children}) => {
+
+// eslint-disable-next-line react/prop-types
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
   // initialize google provider
   const googleProvider = new GoogleAuthProvider();
+
+  // initialize facebook provider
+  const facebookProvider = new FacebookAuthProvider();
 
   // Create user with email and password
   const createUser = (email, password) => {
@@ -31,19 +38,25 @@ const AuthProvider = ({children}) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-// login with email and password 
-const login= (email, password) => {
+//   Login with facebook 
+const signInWithFacebook = () => {
+    setLoading(true);
+    return signInWithPopup(auth, facebookProvider);
+  };
+
+  // login with email and password
+  const login = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
-}
+  };
 
-// logout 
-const logOut = () => {
+  // logout
+  const logOut = () => {
     setLoading(true);
-    return signOut(auth)
-};
+    return signOut(auth);
+  };
 
-const updateUserProfile = (name, photo) => {
+  const updateUserProfile = (name, photo) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
       photoURL: photo,
@@ -67,9 +80,10 @@ const updateUserProfile = (name, photo) => {
     setLoading,
     createUser,
     signInWithGoogle,
+    signInWithFacebook,
     login,
     logOut,
-    updateUserProfile
+    updateUserProfile,
   };
 
   return (
